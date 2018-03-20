@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
@@ -98,6 +98,63 @@
         </main>
     </div>
 
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+
+
+        $(".js-add-to-cart").submit(function(e){
+            e.preventDefault();   // reikalingas, kad nenukeliautų į kitą puslapį
+
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: "POST",
+                data: $(this).serialize(),
+
+                error: function(msg){
+                    console.log(msg);
+                },
+
+                success: function(data){
+                    let total_amount = parseFloat($("#cart_total").html().replace(',', ''));
+                    let cart_count = $("#cart_size").html() * 1;
+                    let cart = $.parseJSON(data);
+                    total_amount += cart.price;
+                    cart_count++;
+                    $("#cart_total").text(total_amount.toLocaleString('en-GB', {minimumFractionDigits: 2}));
+                    $("#cart_size").text(cart_count);
+
+
+                        // Sukuriam success message:
+
+                    let alert = $("<div></div>");
+                    alert.addClass("alert alert-success sticky-top");
+                    alert.attr("role", "alert");
+                    alert.text("Added to cart " + cart.dish.title + " for price " + cart.price + "€");
+
+                    alert.hide();
+                    $('main .alert').fadeOut();
+                    $('main .container').prepend(alert.fadeIn());
+
+
+                },
+
+            });  //ajaxo pabaiga
+
+        })
+
+    })
+
+
+
+
+
+
+    </script>
 
 </body>
 </html>
