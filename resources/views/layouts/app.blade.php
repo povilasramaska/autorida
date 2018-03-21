@@ -30,38 +30,36 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li><a class="nav-link" href="{{ route('dishes.index') }}">Dishes</a></li>
-                        <li><a class="nav-link" href="{{ route('contact') }}">Contacts</a></li>
+                        <li><a class="nav-link" href="#">Dishes</a></li>
+                        <li><a class="nav-link" href="#">Contacts</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                            @if(Auth::check())
-                            <li><a class="nav-link" href="{{ route('reservations.index') }}">Reservations</a></li>
-                            <li><a class="nav-link" href="{{ route('orders.index') }}">Orders</a></li>
-                            @endif
+
+                            <li><a class="nav-link" href="#">Reservations</a></li>
+                            <li><a class="nav-link" href="#">Orders</a></li>
+
 
                         <!-- Authentication Links -->
-                        @guest
-                            <li><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                            <li><a class="nav-link" href="{{ route('register')}}">Register</a></li>
-                        @else
+
+                            <li><a class="nav-link" href="#">Login</a></li>
+                            <li><a class="nav-link" href="#">Register</a></li>
+
                             <li class="nav-item dropdown">
 
 
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    @if(Auth::check() && Auth::user()->role == 'admin')
-                                    <a class="dropdown-item" href="{{ route('users.index') }}">
-                                        Users
-                                    </a>
-                                    @endif
 
-                                    <a class="dropdown-item" href="{{ route('users.edit', Auth::user()->id) }}">
+
+
+
+                                    <a class="dropdown-item" href="#">
                                         My profile
                                     </a>
 
@@ -79,15 +77,8 @@
 
                                 </div>
                             </li>
-                        @endguest
-                            <li id="cart">
-                                <a class="nav-link" href="{{  route('cart') }}">
-                                    Cart (<span id="cart_size" class="cart-size">{{Cart::count(csrf_token())}}</span>)
-                                    <small>
-                                        <span id="cart_total" class="cart-total">{{Cart::total(csrf_token())}}</span>
-                                    </small>
-                                </a>
-                            </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -98,63 +89,6 @@
         </main>
     </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-
-    <script type="text/javascript">
-
-    $(document).ready(function(){
-
-
-        $(".js-add-to-cart").submit(function(e){
-            e.preventDefault();   // reikalingas, kad nenukeliautų į kitą puslapį
-
-
-            $.ajax({
-                url: $(this).attr('action'),
-                method: "POST",
-                data: $(this).serialize(),
-
-                error: function(msg){
-                    console.log(msg);
-                },
-
-                success: function(data){
-                    let total_amount = parseFloat($("#cart_total").html().replace(',', ''));
-                    let cart_count = $("#cart_size").html() * 1;
-                    let cart = $.parseJSON(data);
-                    total_amount += cart.price;
-                    cart_count++;
-                    $("#cart_total").text(total_amount.toLocaleString('en-GB', {minimumFractionDigits: 2}));
-                    $("#cart_size").text(cart_count);
-
-
-                        // Sukuriam success message:
-
-                    let alert = $("<div></div>");
-                    alert.addClass("alert alert-success sticky-top");
-                    alert.attr("role", "alert");
-                    alert.text("Added to cart " + cart.dish.title + " for price " + cart.price + "€");
-
-                    alert.hide();
-                    $('main .alert').fadeOut();
-                    $('main .container').prepend(alert.fadeIn());
-
-
-                },
-
-            });  //ajaxo pabaiga
-
-        })
-
-    })
-
-
-
-
-
-
-    </script>
 
 </body>
 </html>
